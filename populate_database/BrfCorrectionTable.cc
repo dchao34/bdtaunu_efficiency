@@ -11,7 +11,15 @@ BrfCorrectionTable::BrfCorrectionTable(const std::string &fname) {
     name2brfcode_[brfcode2string(c)] = c;
   }
 
+  // open file. check that it was successful. 
   std::ifstream fin(fname);
+  if (!fin.is_open()) {
+    throw std::runtime_error(
+      "CsvReader<>::open() : file " + fname + " does not exist. "
+    );
+  }
+
+  // read contents
   std::string name; double brf, fluc;
   while (fin >> name >> brf >> fluc) {
     BrfReweightCode c = name2brfcode_.at(name);
