@@ -8,18 +8,23 @@ import re
 import os
 import os.path
 
-def write_brf_root2csv_cfg(outcsv_fname, inroot_fname, config_parser):
+def write_brf_root2csv_cfg(outcsv_fname, inroot_fname, 
+                           args, config_parser):
 
     cernroot_fname = inroot_fname
     cernroot_trname = config_parser.get('job_config', 'cernroot_trname')
     output_fname = outcsv_fname
     brf_correction_table_fname = config_parser.get('job_config', 'brf_correction_table_fname')
+    mc_weight_table_fname = config_parser.get('job_config', 'mc_weight_table_fname')
 
     temp = tempfile.NamedTemporaryFile(delete=False)
     temp.write('cernroot_fname = {0}\n'.format(cernroot_fname))
     temp.write('cernroot_trname = {0}\n'.format(cernroot_trname))
     temp.write('output_fname = {0}\n'.format(output_fname))
     temp.write('brf_correction_table_fname = {0}\n'.format(brf_correction_table_fname))
+    temp.write('mc_weight_table_fname = {0}\n'.format(mc_weight_table_fname))
+    temp.write('spmode = {0}\n'.format(args.spmode))
+    temp.write('run = {0}\n'.format(args.run))
     temp.flush()
     temp.close()
 
@@ -59,6 +64,10 @@ if __name__ == '__main__':
                         help='Directory containing all ROOT files. ')
     parser.add_argument('tblname', type=str, 
                         help='Table to copy to. ')
+    parser.add_argument('spmode', type=str, 
+                        help='spmode corresponding to the ROOT files. ')
+    parser.add_argument('run', type=str, 
+                        help='run corresponding to the ROOT files. ')
     parser.add_argument('--cfg_fname', default='copy_root2db.cfg',
                         help='Config file name. ')
     parser.add_argument('--verbose', action='store_true',
@@ -82,8 +91,12 @@ if __name__ == '__main__':
     print '    => found {0} root files\n'.format(len(rootfile_list))
     print '  destination database: {0}'.format(config_parser.get('job_config', 'dbname'))
     print '  destination table: {0}\n'.format(args.tblname)
-    print '  branching fraction lookup table: {0}\n'.format(
+    print '  branching fraction lookup table: {0}'.format(
             config_parser.get('job_config', 'brf_correction_table_fname'))
+    print '  mc lumi weight lookup table: {0}\n'.format(
+            config_parser.get('job_config', 'mc_weight_table_fname'))
+    print '  spmode: {0}'.format(args.spmode)
+    print '  run: {0}\n'.format(args.run)
 
     print '+ Processing jobs\n'
 
@@ -98,7 +111,7 @@ if __name__ == '__main__':
 
         # write brf_root2csv config file
         brf_root2csv_cfg = write_brf_root2csv_cfg(
-                brf_root2csv_out.name, root_fname, config_parser)
+                brf_root2csv_out.name, root_fname, args, config_parser)
 
         if args.verbose and i == 0: 
             print '+ Contents of brf_root2csv config file for {0}:\n'.format(root_fname)
@@ -123,7 +136,7 @@ if __name__ == '__main__':
                 with open(brf_root2csv_out.name, 'r') as f:
                     for line in f:
                         w.write(line)
-            print '  => wrote csv output of {0} to {0}.\n'.format(root_fname, debug_outfname)
+            print '  => wrote csv output of {0} to {1}.\n'.format(root_fname, debug_outfname)
 
         # copy contents of csv to database 
         if args.verbose and i == 0:

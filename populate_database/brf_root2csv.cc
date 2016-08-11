@@ -12,6 +12,7 @@
 #include <CsvWriter.h>
 #include <pgstring_utils.h>
 
+#include "MCWeightAssigner.h"
 #include "BrfReweightCode.h"
 #include "BrfCorrectionTable.h"
 
@@ -40,6 +41,12 @@ int main(int argc, char **argv) {
              "output csv file name. ")
         ("brf_correction_table_fname", po::value<std::string>(), 
              "file containing branching fraction weights. ")
+        ("mc_weight_table_fname", po::value<std::string>(), 
+             "file containing mc luminosity weights. ")
+        ("spmode", po::value<int>(), 
+             "spmode corresponding to the rootfiles. ")
+        ("run", po::value<int>(), 
+             "run corresponding to the rootfiles. ")
     ;
 
     po::options_description hidden("Hidden options");
@@ -103,6 +110,13 @@ int main(int argc, char **argv) {
 
 void evaluate(const po::variables_map &vm) {
 
+  // read in mc luminosity weights and compute it
+  std::string mc_weight_table_fname = vm["mc_weight_table_fname"].as<std::string>();
+  int spmode = vm["spmode"].as<int>();
+  int run = vm["run"].as<int>();
+  MCWeightAssigner mc_weight_table(mc_weight_table_fname);
+  double lumi_weight = mc_weight_table.get_weight(spmode, run);
+
   // read in branching fraction correction table
   std::string brf_correction_table_fname = vm["brf_correction_table_fname"].as<std::string>();
   BrfCorrectionTable brf_correction_table(brf_correction_table_fname);
@@ -111,7 +125,9 @@ void evaluate(const po::variables_map &vm) {
   std::string output_fname = vm["output_fname"].as<std::string>();
   CsvWriter csv;
   csv.open(output_fname, {
-      "eventlabel", "b1_brf_mode", "b2_brf_mode", "brf_correction_weight"
+      "eventlabel", 
+      "spmode", "run", "lumi_weight",
+      "b1_brf_mode", "b2_brf_mode", "brf_correction_weight"
   });
 
   // open input root file and ttree
@@ -148,6 +164,9 @@ void evaluate(const po::variables_map &vm) {
 
     // write to csv
     csv.set("eventlabel", pu::type2string(eventlabel));
+    csv.set("spmode", pu::type2string(spmode));
+    csv.set("run", pu::type2string(run));
+    csv.set("lumi_weight", pu::type2string(lumi_weight));
     csv.set("b1_brf_mode", brfcode2string(b1_brf_mode));
     csv.set("b2_brf_mode", brfcode2string(b2_brf_mode));
     csv.set("brf_correction_weight", pu::type2string(brf_correction_weight));

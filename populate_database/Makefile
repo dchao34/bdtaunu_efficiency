@@ -4,7 +4,7 @@
 BINARIES = brf_root2csv
 
 # objects to package into the shared library
-OBJECTS = BrfCorrectionTable.o
+OBJECTS = BrfCorrectionTable.o MCWeightAssigner.o
 
 # external dependencies
 # ---------------------
