@@ -1,0 +1,15 @@
+psql -d bdtaunuhad_lite -f sql/reset.sql
+
+./copy_root2db.py /nfs/raid13/babar/jkim/brf_corrected_efficiency/sp1235r1 raw_collection_brf_mode_sp1235
+./copy_root2db.py /nfs/raid13/babar/jkim/brf_corrected_efficiency/sp1235r2 raw_collection_brf_mode_sp1235
+./copy_root2db.py /nfs/raid13/babar/jkim/brf_corrected_efficiency/sp1235r3 raw_collection_brf_mode_sp1235
+./copy_root2db.py /nfs/raid13/babar/jkim/brf_corrected_efficiency/sp1235r4 raw_collection_brf_mode_sp1235
+./copy_root2db.py /nfs/raid13/babar/jkim/brf_corrected_efficiency/sp1235r5 raw_collection_brf_mode_sp1235
+./copy_root2db.py /nfs/raid13/babar/jkim/brf_corrected_efficiency/sp1235r6 raw_collection_brf_mode_sp1235
+
+./copy_root2db.py /nfs/raid13/babar/jkim/brf_corrected_efficiency/sp1237r1 raw_collection_brf_mode_sp1237
+./copy_root2db.py /nfs/raid13/babar/jkim/brf_corrected_efficiency/sp1237r2 raw_collection_brf_mode_sp1237
+./copy_root2db.py /nfs/raid13/babar/jkim/brf_corrected_efficiency/sp1237r3 raw_collection_brf_mode_sp1237
+./copy_root2db.py /nfs/raid13/babar/jkim/brf_corrected_efficiency/sp1237r4 raw_collection_brf_mode_sp1237
+./copy_root2db.py /nfs/raid13/babar/jkim/brf_corrected_efficiency/sp1237r5 raw_collection_brf_mode_sp1237
+./copy_root2db.py /nfs/raid13/babar/jkim/brf_corrected_efficiency/sp1237r6 raw_collection_brf_mode_sp1237
