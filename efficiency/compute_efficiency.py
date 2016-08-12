@@ -40,9 +40,9 @@ if __name__ == '__main__':
     parser.add_argument('brf_weight_fname', type=str,
                         help='Branching fraction weight '
                              'configuration file name. ')
-    parser.add_argument('--sample_modes_fname', default='data/o_modes.csv',
+    parser.add_argument('--sample_modes_fname', default='data/s_modes.csv',
                         help='File containing mode data for the sample data. ')
-    parser.add_argument('--source_modes_fname', default='data/s_modes.csv',
+    parser.add_argument('--source_modes_fname', default='data/o_modes.csv',
                         help='File containing mode data for the source data. ')
 
     args = parser.parse_args()
